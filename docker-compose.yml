@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  db:
+    image: mysql:5.7
+    environment:
+      - MYSQL_DATABASE=magento
+      - MYSQL_ROOT_PASSWORD=root
+    restart: always
+    ports:
+      - 3306:3306
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    links:
+      - db
+    ports:
+      - 443:80
+    environment:
+      - PMA_ARBITRARY=1
+
+  php-apache:
+    build: .
+    volumes:
+       - ./:/var/www/html/
+    ports:
+       - 5000:80
+    links:
+       - db
